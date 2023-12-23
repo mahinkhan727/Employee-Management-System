@@ -18,6 +18,6 @@ class Employee extends Model
 
     public function achiemenmts()
     {
-        return $this->belongsToMany[Achievement::class];
+        return $this->belongsToMany(Achievement::class);
     }
 }

@@ -53,14 +53,6 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-6">
-                <select class="form-select" aria-label="Default select example" name="ach_name">
-                    <option selected value="">Select Achievement</option>
-                    @foreach ($ach as $achieve)
-                        <option value="{{ $achieve['id'] }}">{{ $achieve['name'] }}</option>
-                    @endforeach
-                </select>
-            </div>
             <div class="col-12">
                 <button type="submit" class="btn btn-outline-success">Submit</button>
             </div>

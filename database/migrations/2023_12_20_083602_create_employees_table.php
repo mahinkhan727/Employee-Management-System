@@ -14,8 +14,6 @@ return new class extends Migration {
             $table->id();
             $table->unsignedBigInteger('dept_id');
             $table->foreign('dept_id')->references('id')->on('departments')->onDelete('cascade' );
-            $table->unsignedBigInteger('ach_id');
-            $table->foreign('ach_id')->references('id')->on('achievements')->onDelete('cascade' );
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone');

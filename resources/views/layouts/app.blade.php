@@ -61,6 +61,9 @@
                                         class="btn btn-light">Department</button></a>
                                 <a href="{{ route('achievement.index') }}"><button type="button"
                                         class="btn btn-light">Achievement</button></a>
+                                        <a href="{{ route('achemp.index') }}"><button type="button"
+                                            class="btn btn-light">Achievement Employee</button></a>
+
                             </li>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"

@@ -7,12 +7,20 @@ use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $value = Department::all();
+        if ($request->has('query')) {
+            return $this->search($request);
+        }
+
+        $value = Department::paginate(4);
         return view('Department.index', ['data' => $value]);
     }
 
@@ -52,8 +60,8 @@ class DepartmentController extends Controller
      */
     public function edit(Department $department)
     {
-        $dep= Department::find($department);
-        return view('Department.edit',['depart'=>$dep]);
+        $dep = Department::find($department);
+        return view('Department.edit', ['depart' => $dep]);
     }
 
     /**
@@ -79,5 +87,16 @@ class DepartmentController extends Controller
         $data = Department::find($department);
         $data->each->delete();
         return redirect()->route('department.index')->with('detele_message', 'Department Delete Successfully');
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $data = Department::where('name', 'like', '%' . $query . '%')
+            ->orWhere('id', 'like', '%' . $query . '%')
+
+            ->paginate(4);
+
+        return view('Department.index', ['data' => $data, 'query' => $query]);
     }
 }

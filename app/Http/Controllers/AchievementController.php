@@ -7,12 +7,20 @@ use Illuminate\Http\Request;
 
 class AchievementController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $test = Achievement::all();
+        if ($request->has('query')) {
+            return $this->search($request);
+        }
+
+        $test = Achievement::paginate(4);
         return view('Achievement.index', ['temp' => $test]);
     }
 
@@ -78,5 +86,16 @@ class AchievementController extends Controller
         $data = Achievement::find($achievement);
         $data->each->delete();
         return redirect()->route('achievement.index')->with('detele_message', 'Achievement Delete Successfully');
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $data = Achievement::where('name', 'like', '%' . $query . '%')
+            ->orWhere('id', 'like', '%' . $query . '%')
+
+            ->paginate(4);
+
+        return view('Achievement.index', ['temp' => $data, 'query' => $query]);
     }
 }

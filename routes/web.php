@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AchievementController;
+use App\Http\Controllers\AchievementEmpoloyeeController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\EmployeeController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 Route::resource('/employee', EmployeeController::class);
 
+
 Route::resource('/department', DepartmentController::class);
 
 Route::resource('/achievement', AchievementController::class);
+
+Route::resource('/achemp',AchievementEmpoloyeeController::class);
+
+Route::get('/employee/search', 'EmployeeController@search')->name('employee.search');

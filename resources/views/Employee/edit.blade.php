@@ -10,9 +10,9 @@
                 <a href={{ route('employee.index') }}><button type="button" class="btn btn-outline-primary">Back</button></a>
             </div>
         </div>
-        <form class="row g-3" method="POST" action="">
-            @csrf
+        <form class="row g-3" method="POST" action="{{ route('employee.update', $obj[0]->id) }}">
             @method('PUT')
+            @csrf
 
             @if (Session::has('success'))
                 <div class="alert alert-success">{{ Session::get('success') }}</div>
@@ -23,7 +23,7 @@
 
             <div class="col-md-4">
                 <label for="name" class="form-label">Name</label>
-                <input type="name" class="form-control" id="name" value="{{ $obj[0]->id }}" name="name"
+                <input type="name" class="form-control" id="name" value="{{ $obj[0]->name }}" name="name"
                     required>
 
             </div>
@@ -49,18 +49,6 @@
                             <option selected value="{{ $department['id'] }}">{{ $department['name'] }}</option>
                         @else
                             <option value="{{ $department['id'] }}">{{ $department['name'] }}</option>
-                        @endif
-                    @endforeach
-                </select>
-            </div>
-            <div class="col-md-6">
-                <select class="form-select" aria-label="Default select example" name="ach_name">
-                    <option selected value="">Select Achievement</option>
-                    @foreach ($a_data as $achieve)
-                        @if ($obj[0]->ach_id == $achieve['id'])
-                            <option selected value ="{{ $achieve['id'] }}">{{ $achieve['name'] }}</option>
-                        @else
-                            <option value ="{{ $achieve['id'] }}">{{ $achieve['name'] }}</option>
                         @endif
                     @endforeach
                 </select>

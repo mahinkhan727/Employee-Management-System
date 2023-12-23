@@ -2,22 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Achievement;
 use App\Models\Department;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+
+        if ($request->has('query')) {
+            return $this->search($request);
+        }
+
         $data = Employee::paginate(4);
         $d_data = Department::all();
-        $a_data = Achievement::all();
-        return view('Employee.index', ['employees' => $data, 'dep' => $d_data, 'ach' => $a_data]);
+        return view('Employee.index', ['employees' => $data, 'dep' => $d_data]);
     }
 
     /**
@@ -26,8 +34,7 @@ class EmployeeController extends Controller
     public function create()
     {
         $d_data = Department::all();
-        $a_data = Achievement::all();
-        return view('Employee.create', ['dep' => $d_data, 'ach' => $a_data]);
+        return view('Employee.create', ['dep' => $d_data]);
     }
 
     /**
@@ -35,14 +42,12 @@ class EmployeeController extends Controller
      */
     public function store(Request $request)
     {
-
         $obj_emp = new Employee();
         $obj_emp->name = $request['name'];
         $obj_emp->email = $request['email'];
         $obj_emp->phone = $request['phone'];
         $obj_emp->address = $request['address'];
         $obj_emp->dept_id = $request['dem_name'];
-        $obj_emp->ach_id = $request['ach_name'];
         $result = $obj_emp->save();
         if ($result) {
             return back()->with('success', 'Add Employee Completed.');
@@ -64,13 +69,11 @@ class EmployeeController extends Controller
      */
     public function edit(Employee $employee)
     {
-        $obj=[];
+        $obj = [];
         $d_data = Department::all();
-        $a_data = Achievement::all();
-        $obj=Employee::find($employee);
+        $obj = Employee::find($employee);
 
-        return view('Employee.edit',compact('obj', 'd_data', 'a_data'));
-
+        return view('Employee.edit', compact('obj', 'd_data'));
     }
 
     /**
@@ -92,9 +95,27 @@ class EmployeeController extends Controller
      */
     public function destroy(Employee $employee)
     {
-        $data = Employee::find($employee) ;
-        $data->each-> delete();
+        $data = Employee::find($employee);
+        $data->each->delete();
         return redirect()->route('employee.index')->with('detele_message', 'Employee Delete Successfully');
+    }
 
+    /**
+     * Custom made Sreach Function.
+     */
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $data = Employee::where('name', 'like', '%' . $query . '%')
+            ->orWhere('email', 'like', '%' . $query . '%')
+            ->orWhere('phone', 'like', '%' . $query . '%')
+            ->orWhere('address', 'like', '%' . $query . '%')
+            ->orWhere('id', 'like', '%' . $query . '%')
+            ->paginate(4);
+
+        $d_data = Department::all();
+        return view('Employee.index', ['employees' => $data, 'dep' => $d_data, 'query' => $query]);
     }
 }
+
+
